@@ -1,0 +1,76 @@
+# Cofre Pessoal - Gerenciador de Senhas Local
+
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+
+Um gerenciador de senhas moderno, seguro e totalmente local. O **Cofre Pessoal** foi projetado para oferecer uma maneira segura e intuitiva de armazenar suas credenciais sem que seus dados saiam do seu navegador.
+
+## ✨ Funcionalidades Principais
+
+*   **Segurança em Primeiro Lugar:** Nenhuma informação é enviada para servidores externos. Tudo fica armazenado localmente no seu navegador.
+*   **Criptografia Forte:**
+    *   Sua **Senha Mestre** é protegida com PBKDF2, um algoritmo robusto de derivação de chave.
+    *   Todas as suas senhas salvas são criptografadas com **AES-256-GCM** antes de serem armazenadas.
+*   **Gerenciamento Completo:** Adicione, edite, visualize e remova suas senhas com facilidade.
+*   **Organização:** Categorize suas senhas (Pessoal, Trabalho, Financeiro, etc.) para fácil acesso.
+*   **Busca e Filtragem:** Encontre rapidamente a senha que você precisa.
+*   **Gerador de Senhas:** Crie senhas fortes e personalizadas diretamente na aplicação.
+*   **Indicador de Força:** Avalie a força das suas senhas em tempo real.
+*   **Backup Seguro:** Exporte e importe seus dados em um formato JSON criptografado.
+
+## 🔐 Modelo de Segurança
+
+A segurança é o pilar deste projeto. É importante entender como seus dados são protegidos:
+
+1.  **Armazenamento Local:** Todos os dados (hash da senha mestre e senhas criptografadas) são salvos no `localStorage` do seu navegador. Isso significa que os dados estão fisicamente na sua máquina e não são acessíveis por outros sites.
+2.  **Criptografia da Senha Mestre:** A senha mestre que você cria nunca é armazenada. Em vez disso, ela é usada com um "salt" (um valor aleatório) para gerar um hash de verificação (usando PBKDF2). Ao fazer login, a senha digitada passa pelo mesmo processo e o resultado é comparado com o hash salvo.
+3.  **Criptografia das Entradas:** A senha mestre também é usada para derivar uma chave de criptografia (AES-256-GCM) que existe apenas em memória enquanto você está com a sessão ativa. Todas as suas senhas e notas são criptografadas com esta chave antes de serem salvas. Sem a senha mestre, os dados armazenados são indecifráveis.
+
+**Atenção:** Por ser um sistema local, **não há como recuperar a senha mestre**. Guarde-a com segurança.
+
+## 🛠️ Tecnologias Utilizadas
+
+*   **React** - Biblioteca para a construção da interface.
+*   **Vite** - Ferramenta de build e servidor de desenvolvimento.
+*   **TypeScript** - Para um código mais robusto e seguro.
+*   **Tailwind CSS** - Framework de estilização.
+*   **shadcn/ui** - Coleção de componentes de UI.
+*   **Web Crypto API** - API nativa do navegador para as operações de criptografia.
+
+## 🚀 Como Executar Localmente
+
+Para executar o projeto na sua máquina, você precisará do Node.js (versão 18 ou superior) instalado.
+
+1.  **Clone o repositório** (ou baixe e descompacte o arquivo ZIP):
+    ```bash
+    git clone https://github.com/seu-usuario/senha-segura-guardiao.git
+    ```
+
+2.  **Navegue até a pasta do projeto:**
+    ```bash
+    cd senha-segura-guardiao-main/senha-segura-guardiao-main
+    ```
+
+3.  **Instale as dependências:**
+    ```bash
+    npm install
+    ```
+
+4.  **Inicie o servidor de desenvolvimento:**
+    ```bash
+    npm run dev
+    ```
+
+5.  Abra seu navegador e acesse `http://localhost:5173` (ou o endereço indicado no seu terminal).
+
+## 📜 Scripts Disponíveis
+
+No diretório do projeto, você pode executar:
+
+*   `npm run dev`: Inicia o aplicativo em modo de desenvolvimento.
+*   `npm run build`: Compila o aplicativo para produção na pasta `dist`.
+*   `npm run lint`: Executa o linter para verificar erros de código.
+*   `npm run preview`: Inicia um servidor local para visualizar a versão de produção.
+
