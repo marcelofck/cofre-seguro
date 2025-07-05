@@ -13,7 +13,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
+      <BrowserRouter basename="/cofre-seguro/">
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/netrubihelp" element={<Index />} />
