@@ -18,15 +18,40 @@ export const PasswordGenerator = ({ onPasswordGenerated }: PasswordGeneratorProp
   const [includeLowercase, setIncludeLowercase] = useState(true);
   const [includeNumbers, setIncludeNumbers] = useState(true);
   const [includeSymbols, setIncludeSymbols] = useState(true);
+  const [excludeAmbiguous, setExcludeAmbiguous] = useState(true);
   const [generatedPassword, setGeneratedPassword] = useState('');
 
   const generatePassword = () => {
+    const charsets = {
+      lowercase: 'abcdefghijklmnopqrstuvwxyz',
+      uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+      numbers: '0123456789',
+      symbols: '!@#$%^&*()_+-=[]{}|;:,.<>?',
+    };
+
+    const requiredChars: string[] = [];
     let charset = '';
-    
-    if (includeLowercase) charset += 'abcdefghijklmnopqrstuvwxyz';
-    if (includeUppercase) charset += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    if (includeNumbers) charset += '0123456789';
-    if (includeSymbols) charset += '!@#$%^&*()_+-=[]{}|;:,.<>?';
+
+    const lowercaseCharset = excludeAmbiguous ? charsets.lowercase.replace(/[lo]/g, '') : charsets.lowercase;
+    const uppercaseCharset = excludeAmbiguous ? charsets.uppercase.replace(/[IO]/g, '') : charsets.uppercase;
+    const numbersCharset = excludeAmbiguous ? charsets.numbers.replace(/[10]/g, '') : charsets.numbers;
+
+    if (includeLowercase) {
+      charset += lowercaseCharset;
+      requiredChars.push(lowercaseCharset.charAt(Math.floor(Math.random() * lowercaseCharset.length)));
+    }
+    if (includeUppercase) {
+      charset += uppercaseCharset;
+      requiredChars.push(uppercaseCharset.charAt(Math.floor(Math.random() * uppercaseCharset.length)));
+    }
+    if (includeNumbers) {
+      charset += numbersCharset;
+      requiredChars.push(numbersCharset.charAt(Math.floor(Math.random() * numbersCharset.length)));
+    }
+    if (includeSymbols) {
+      charset += charsets.symbols;
+      requiredChars.push(charsets.symbols.charAt(Math.floor(Math.random() * charsets.symbols.length)));
+    }
 
     if (charset === '') {
       toast({
@@ -38,11 +63,18 @@ export const PasswordGenerator = ({ onPasswordGenerated }: PasswordGeneratorProp
     }
 
     let password = '';
-    for (let i = 0; i < length[0]; i++) {
+    for (let i = requiredChars.length; i < length[0]; i++) {
       password += charset.charAt(Math.floor(Math.random() * charset.length));
     }
 
-    setGeneratedPassword(password);
+    const passwordArray = (password + requiredChars.join('')).split('');
+    // Embaralha o array para garantir que os caracteres obrigatórios não fiquem no final
+    for (let i = passwordArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [passwordArray[i], passwordArray[j]] = [passwordArray[j], passwordArray[i]];
+    }
+
+    setGeneratedPassword(passwordArray.join(''));
   };
 
   const copyPassword = async () => {
@@ -172,6 +204,17 @@ export const PasswordGenerator = ({ onPasswordGenerated }: PasswordGeneratorProp
                 />
                 <Label htmlFor="symbols" className="text-sm">
                   Símbolos (!@#$%^&*)
+                </Label>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox 
+                  id="ambiguous" 
+                  checked={excludeAmbiguous}
+                  onCheckedChange={(checked) => setExcludeAmbiguous(checked === true)}
+                />
+                <Label htmlFor="ambiguous" className="text-sm">
+                  Evitar caracteres ambíguos (I, l, o, O, 0, 1)
                 </Label>
               </div>
             </div>
